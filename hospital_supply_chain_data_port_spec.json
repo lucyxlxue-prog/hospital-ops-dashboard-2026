@@ -4,27 +4,27 @@
   "unit": "CNY",
   "generatedDate": "2026-07-16",
   "dashboardFields": [
-    "鍖婚櫌鍚嶇О",
-    "绛剧害鍚堝悓閲戦",
-    "鍏抽敭鍚堝悓鏉℃",
-    "鍦ㄨ繍钀ョ殑渚涘簲閾惧搧绫?,
-    "姣忎釜椤圭洰姣忓懆杩愯惀鏀跺叆",
-    "YTD杩愯惀鏀跺叆"
+    "医院名称",
+    "签约合同金额",
+    "关键合同条款",
+    "在运营的供应链品类",
+    "每个项目每周运营收入",
+    "YTD运营收入"
   ],
   "endpoints": [
     {
       "method": "POST",
       "path": "/api/contracts/upsert",
-      "purpose": "鍐欏叆鎴栨洿鏂板尰闄㈠悎鍚屼富鏁版嵁",
+      "purpose": "写入或更新医院合同主数据",
       "payloadExample": {
-        "hospitalName": "涓婃捣鐟為噾鍖婚櫌",
-        "projectName": "鑰楁潗 SPD 杩愯惀椤圭洰",
+        "hospitalName": "上海瑞金医院",
+        "projectName": "耗材 SPD 运营项目",
         "contractAmount": 42000000,
-        "keyTerms": "SPD鎵樼浠擄紱鍥炴鍛ㄦ湡45澶╋紱骞村害淇濆簳閲?200涓?,
+        "keyTerms": "SPD托管仓；回款周期45天；年度保底量1200万",
         "categories": [
-          "楂樺€艰€楁潗",
-          "浣庡€艰€楁潗",
-          "璇曞墏"
+          "高值耗材",
+          "低值耗材",
+          "试剂"
         ],
         "source": {
           "type": "contract_scan_ocr",
@@ -35,85 +35,85 @@
     {
       "method": "POST",
       "path": "/api/revenue/weekly",
-      "purpose": "鍐欏叆姣忎釜鍖婚櫌椤圭洰鐨勫懆杩愯惀鏀跺叆",
+      "purpose": "写入每个医院项目的周运营收入",
       "payloadExample": {
-        "hospitalName": "涓婃捣鐟為噾鍖婚櫌",
-        "projectName": "鑰楁潗 SPD 杩愯惀椤圭洰",
+        "hospitalName": "上海瑞金医院",
+        "projectName": "耗材 SPD 运营项目",
         "week": "2026-W25",
         "amount": 1885000,
-        "submittedBy": "杩愯惀璐熻矗浜?
+        "submittedBy": "运营负责人"
       }
     },
     {
       "method": "POST",
       "path": "/api/import/base-excel",
-      "purpose": "瀵煎叆鏈绫诲瀷鐨?Excel 鏁版嵁鍩哄簳琛紝鑷姩鎷嗚В鍖婚櫌銆侀」鐩€佸懆鏈熷拰閲戦"
+      "purpose": "导入本次类型的 Excel 数据基底表，自动拆解医院、项目、周期和金额"
     }
   ],
   "fieldMapping": [
     {
-      "sheet": "澶勬柟娴佽浆璁㈠崟琛?,
-      "hospital": "鍖婚櫌鍚嶇О",
-      "project": "澶勬柟娴佽浆",
-      "week": "鏃堕棿鍛ㄦ湡",
-      "amount": "澶勬柟鑽搧閲戦",
-      "category": "鑽搧"
+      "sheet": "处方流转订单表",
+      "hospital": "医院名称",
+      "project": "处方流转",
+      "week": "时间周期",
+      "amount": "处方药品金额",
+      "category": "药品"
     },
     {
-      "sheet": "BBC鍟嗗煄鍘熺増璁㈠崟琛?,
-      "hospital": "浼佷笟鍚嶇О",
-      "project": "BBC鍟嗗煄",
-      "week": "鏃堕棿鍛ㄦ湡",
-      "amount": "璁㈠崟瀹炰粯閲戦/鍟嗗搧GMV/璁㈠崟鎬婚噾棰?,
-      "category": "鍟嗗煄"
+      "sheet": "BBC商城原版订单表",
+      "hospital": "企业名称",
+      "project": "BBC商城",
+      "week": "时间周期",
+      "amount": "订单实付金额/商品GMV/订单总金额",
+      "category": "商城"
     },
     {
-      "sheet": "浜戜氦鏄?,
-      "hospital": "鏈綊灞炲尰闄?,
-      "project": "浜戜氦鏄?,
-      "week": "鏃堕棿鍛ㄦ湡",
-      "amount": "搴旀敹閲戦/璁㈠崟鐢ㄦ埛瀹炰粯閲戦",
-      "category": "浜戜氦鏄?
+      "sheet": "云交易",
+      "hospital": "未归属医院",
+      "project": "云交易",
+      "week": "时间周期",
+      "amount": "应收金额/订单用户实付金额",
+      "category": "云交易"
     },
     {
-      "sheet": "鍖楀効澶勬柟",
-      "hospital": "鍖椾含鍎跨鍖婚櫌",
-      "project": "澶勬柟娴佽浆",
-      "week": "鏃堕棿鍛ㄦ湡",
-      "amount": "閲戦",
-      "category": "鑽搧"
+      "sheet": "北儿处方",
+      "hospital": "北京儿童医院",
+      "project": "处方流转",
+      "week": "时间周期",
+      "amount": "金额",
+      "category": "药品"
     },
     {
-      "sheet": "鐝犳捣鍙岄€氶亾",
-      "hospital": "鐝犳捣甯備汉姘戝尰闄?,
-      "project": "鍙岄€氶亾",
-      "week": "鏃堕棿鍛ㄦ湡",
-      "amount": "灏忚閲戦/鎬婚噾棰?,
-      "category": "鑽搧銆佸尰淇濆弻閫氶亾"
+      "sheet": "珠海双通道",
+      "hospital": "珠海市人民医院",
+      "project": "双通道",
+      "week": "时间周期",
+      "amount": "小计金额/总金额",
+      "category": "药品、医保双通道"
     },
     {
-      "sheet": "鎱ч噰",
-      "hospital": "鍖婚櫌",
-      "project": "鎱ч噰",
-      "week": "鏃堕棿鍛ㄦ湡/statdate",
+      "sheet": "慧采",
+      "hospital": "医院",
+      "project": "慧采",
+      "week": "时间周期/statdate",
       "amount": "gmv_sum",
       "category": "item_second_cate_name/item_third_cate_name"
     },
     {
-      "sheet": "鍦板潧HIV",
-      "hospital": "鍖椾含鍦板潧鍖婚櫌",
-      "project": "HIV鎮ｈ€呮湇鍔?,
-      "week": "鏃堕棿鍛ㄦ湡",
-      "amount": "寮曞鎴愪氦璁㈠崟閲戦",
-      "category": "HIV杩愯惀"
+      "sheet": "地坛HIV",
+      "hospital": "北京地坛医院",
+      "project": "HIV患者服务",
+      "week": "时间周期",
+      "amount": "引导成交订单金额",
+      "category": "HIV运营"
     },
     {
-      "sheet": "浜掑尰2.0",
-      "hospital": "鍖婚櫌",
-      "project": "浜掕仈缃戝尰闄?.0",
-      "week": "鏃堕棿鍛ㄦ湡",
-      "amount": "鎬婚棶璇奊MV+鎬昏嵂鍝丟MV",
-      "category": "闂瘖銆佽嵂鍝?
+      "sheet": "互医2.0",
+      "hospital": "医院",
+      "project": "互联网医院2.0",
+      "week": "时间周期",
+      "amount": "总问诊GMV+总药品GMV",
+      "category": "问诊、药品"
     }
   ]
 }
