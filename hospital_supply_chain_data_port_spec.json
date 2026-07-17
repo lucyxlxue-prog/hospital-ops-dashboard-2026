@@ -1,0 +1,119 @@
+{
+  "name": "hospital_supply_chain_data_port",
+  "version": "1.1.0",
+  "unit": "CNY",
+  "generatedDate": "2026-07-16",
+  "dashboardFields": [
+    "鍖婚櫌鍚嶇О",
+    "绛剧害鍚堝悓閲戦",
+    "鍏抽敭鍚堝悓鏉℃",
+    "鍦ㄨ繍钀ョ殑渚涘簲閾惧搧绫?,
+    "姣忎釜椤圭洰姣忓懆杩愯惀鏀跺叆",
+    "YTD杩愯惀鏀跺叆"
+  ],
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/api/contracts/upsert",
+      "purpose": "鍐欏叆鎴栨洿鏂板尰闄㈠悎鍚屼富鏁版嵁",
+      "payloadExample": {
+        "hospitalName": "涓婃捣鐟為噾鍖婚櫌",
+        "projectName": "鑰楁潗 SPD 杩愯惀椤圭洰",
+        "contractAmount": 42000000,
+        "keyTerms": "SPD鎵樼浠擄紱鍥炴鍛ㄦ湡45澶╋紱骞村害淇濆簳閲?200涓?,
+        "categories": [
+          "楂樺€艰€楁潗",
+          "浣庡€艰€楁潗",
+          "璇曞墏"
+        ],
+        "source": {
+          "type": "contract_scan_ocr",
+          "confidence": 0.91
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/revenue/weekly",
+      "purpose": "鍐欏叆姣忎釜鍖婚櫌椤圭洰鐨勫懆杩愯惀鏀跺叆",
+      "payloadExample": {
+        "hospitalName": "涓婃捣鐟為噾鍖婚櫌",
+        "projectName": "鑰楁潗 SPD 杩愯惀椤圭洰",
+        "week": "2026-W25",
+        "amount": 1885000,
+        "submittedBy": "杩愯惀璐熻矗浜?
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/import/base-excel",
+      "purpose": "瀵煎叆鏈绫诲瀷鐨?Excel 鏁版嵁鍩哄簳琛紝鑷姩鎷嗚В鍖婚櫌銆侀」鐩€佸懆鏈熷拰閲戦"
+    }
+  ],
+  "fieldMapping": [
+    {
+      "sheet": "澶勬柟娴佽浆璁㈠崟琛?,
+      "hospital": "鍖婚櫌鍚嶇О",
+      "project": "澶勬柟娴佽浆",
+      "week": "鏃堕棿鍛ㄦ湡",
+      "amount": "澶勬柟鑽搧閲戦",
+      "category": "鑽搧"
+    },
+    {
+      "sheet": "BBC鍟嗗煄鍘熺増璁㈠崟琛?,
+      "hospital": "浼佷笟鍚嶇О",
+      "project": "BBC鍟嗗煄",
+      "week": "鏃堕棿鍛ㄦ湡",
+      "amount": "璁㈠崟瀹炰粯閲戦/鍟嗗搧GMV/璁㈠崟鎬婚噾棰?,
+      "category": "鍟嗗煄"
+    },
+    {
+      "sheet": "浜戜氦鏄?,
+      "hospital": "鏈綊灞炲尰闄?,
+      "project": "浜戜氦鏄?,
+      "week": "鏃堕棿鍛ㄦ湡",
+      "amount": "搴旀敹閲戦/璁㈠崟鐢ㄦ埛瀹炰粯閲戦",
+      "category": "浜戜氦鏄?
+    },
+    {
+      "sheet": "鍖楀効澶勬柟",
+      "hospital": "鍖椾含鍎跨鍖婚櫌",
+      "project": "澶勬柟娴佽浆",
+      "week": "鏃堕棿鍛ㄦ湡",
+      "amount": "閲戦",
+      "category": "鑽搧"
+    },
+    {
+      "sheet": "鐝犳捣鍙岄€氶亾",
+      "hospital": "鐝犳捣甯備汉姘戝尰闄?,
+      "project": "鍙岄€氶亾",
+      "week": "鏃堕棿鍛ㄦ湡",
+      "amount": "灏忚閲戦/鎬婚噾棰?,
+      "category": "鑽搧銆佸尰淇濆弻閫氶亾"
+    },
+    {
+      "sheet": "鎱ч噰",
+      "hospital": "鍖婚櫌",
+      "project": "鎱ч噰",
+      "week": "鏃堕棿鍛ㄦ湡/statdate",
+      "amount": "gmv_sum",
+      "category": "item_second_cate_name/item_third_cate_name"
+    },
+    {
+      "sheet": "鍦板潧HIV",
+      "hospital": "鍖椾含鍦板潧鍖婚櫌",
+      "project": "HIV鎮ｈ€呮湇鍔?,
+      "week": "鏃堕棿鍛ㄦ湡",
+      "amount": "寮曞鎴愪氦璁㈠崟閲戦",
+      "category": "HIV杩愯惀"
+    },
+    {
+      "sheet": "浜掑尰2.0",
+      "hospital": "鍖婚櫌",
+      "project": "浜掕仈缃戝尰闄?.0",
+      "week": "鏃堕棿鍛ㄦ湡",
+      "amount": "鎬婚棶璇奊MV+鎬昏嵂鍝丟MV",
+      "category": "闂瘖銆佽嵂鍝?
+    }
+  ]
+}
