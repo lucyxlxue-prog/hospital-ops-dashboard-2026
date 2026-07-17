@@ -1,0 +1,40 @@
+name: Import weekly Excel and rebuild dashboard
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "input/**/*.xlsx"
+      - "input/**/*.xlsm"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-excel-import
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read repository files
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build dashboard from Excel
+        run: python scripts/build_dashboard.py
+
+      - name: Save refreshed dashboard
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html hospital_supply_chain_dashboard_summary.json hospital_supply_chain_data_port_spec.json
+          if git diff --cached --quiet; then
+            echo "No dashboard changes"
+          else
+            git commit -m "Refresh dashboard from weekly Excel"
+            git push
+          fi

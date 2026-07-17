@@ -1,8 +1,8 @@
 {
   "name": "hospital_supply_chain_data_port",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "unit": "CNY",
-  "generatedDate": "2026-07-16",
+  "generatedDate": "2026-07-17",
   "dashboardFields": [
     "医院名称",
     "签约合同金额",
@@ -13,41 +13,12 @@
   ],
   "endpoints": [
     {
-      "method": "POST",
-      "path": "/api/contracts/upsert",
-      "purpose": "写入或更新医院合同主数据",
+      "method": "UPLOAD",
+      "path": "/input/*.xlsx",
+      "purpose": "上传每周最新 Excel 底表，自动刷新看板并累计 YTD",
       "payloadExample": {
-        "hospitalName": "上海瑞金医院",
-        "projectName": "耗材 SPD 运营项目",
-        "contractAmount": 42000000,
-        "keyTerms": "SPD托管仓；回款周期45天；年度保底量1200万",
-        "categories": [
-          "高值耗材",
-          "低值耗材",
-          "试剂"
-        ],
-        "source": {
-          "type": "contract_scan_ocr",
-          "confidence": 0.91
-        }
+        "file": "本周系统导出底表.xlsx"
       }
-    },
-    {
-      "method": "POST",
-      "path": "/api/revenue/weekly",
-      "purpose": "写入每个医院项目的周运营收入",
-      "payloadExample": {
-        "hospitalName": "上海瑞金医院",
-        "projectName": "耗材 SPD 运营项目",
-        "week": "2026-W25",
-        "amount": 1885000,
-        "submittedBy": "运营负责人"
-      }
-    },
-    {
-      "method": "POST",
-      "path": "/api/import/base-excel",
-      "purpose": "导入本次类型的 Excel 数据基底表，自动拆解医院、项目、周期和金额"
     }
   ],
   "fieldMapping": [
