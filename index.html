@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>鍖婚櫌渚涘簲閾捐繍钀ユ暟鎹湅鏉?/title>
+  <style>
+    :root {
+      --bg:#f5f7f8; --panel:#fff; --text:#17202a; --muted:#647184; --line:#dde4eb;
+      --teal:#00796b; --blue:#2563eb; --amber:#b45309; --green:#16803c; --red:#c2410c;
+      --soft:#f9fafb; --shadow:0 12px 30px rgba(23,32,42,.08);
+      font-family:"Microsoft YaHei","PingFang SC","Segoe UI",Arial,sans-serif;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); }
+    button,input,select { font:inherit; }
+    .shell { min-height:100vh; display:grid; grid-template-columns:270px minmax(0,1fr); }
+    .side { position:sticky; top:0; height:100vh; overflow:auto; background:#fff; border-right:1px solid var(--line); padding:22px 18px; }
+    .brand { display:flex; gap:12px; align-items:center; margin-bottom:22px; }
+    .mark { width:40px; height:40px; border-radius:8px; background:#132c33; color:#fff; display:grid; place-items:center; font-weight:850; }
+    .brand h1 { margin:0; font-size:17px; line-height:1.25; }
+    .brand p { margin:3px 0 0; color:var(--muted); font-size:12px; }
+    .nav { display:grid; gap:7px; }
+    .nav button { min-height:38px; border:0; border-radius:8px; padding:8px 10px; text-align:left; background:transparent; color:var(--muted); font-weight:750; cursor:pointer; }
+    .nav button.active { background:#e5f3f0; color:var(--text); }
+    .sidebox { border-top:1px solid var(--line); margin-top:18px; padding-top:16px; color:var(--muted); font-size:12px; line-height:1.55; }
+    .sidebox strong { display:block; color:var(--text); font-size:13px; margin-bottom:6px; }
+    .main { padding:22px; min-width:0; }
+    .top { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; margin-bottom:16px; }
+    .top h2 { margin:0; font-size:25px; line-height:1.2; }
+    .top p { margin:7px 0 0; color:var(--muted); font-size:13px; }
+    .actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .btn { min-height:36px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--text); padding:8px 12px; font-weight:800; cursor:pointer; text-decoration:none; }
+    .btn.primary { background:var(--teal); color:#fff; border-color:var(--teal); }
+    .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:14px; }
+    .metric { background:#fff; border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow); padding:15px; min-height:118px; display:grid; align-content:space-between; gap:10px; }
+    .metric span { color:var(--muted); font-size:13px; }
+    .metric strong { font-size:27px; line-height:1; }
+    .metric small { color:var(--muted); font-size:12px; }
+    .grid { display:grid; grid-template-columns:minmax(0,1.48fr) minmax(350px,.75fr); gap:14px; align-items:start; }
+    .panel { background:#fff; border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow); overflow:hidden; margin-bottom:14px; min-width:0; }
+    .wide { grid-row:span 3; }
+    .panel-head { min-height:56px; padding:13px 15px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .panel-head h3 { margin:0; font-size:15px; }
+    .panel-body { padding:14px 15px; }
+    .pill { display:inline-flex; align-items:center; justify-content:center; border-radius:999px; min-height:24px; padding:3px 8px; background:#e5f3f0; color:var(--teal); font-size:12px; font-weight:850; white-space:nowrap; }
+    .pill.blue { background:#eaf0ff; color:var(--blue); }
+    .pill.amber { background:#fff2d8; color:var(--amber); }
+    .pill.green { background:#e8f7ee; color:var(--green); }
+    .filters { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:12px; }
+    input,select { width:100%; min-height:37px; border:1px solid #c5ced8; border-radius:8px; padding:8px 10px; outline:none; background:#fff; }
+    input:focus,select:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(0,121,107,.12); }
+    .table-wrap { overflow:auto; max-height:650px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th,td { text-align:left; vertical-align:top; padding:11px 10px; border-bottom:1px solid var(--line); }
+    th { position:sticky; top:0; background:#f8fafc; z-index:1; color:#415064; font-size:12px; font-weight:850; white-space:nowrap; }
+    td:first-child { min-width:180px; font-weight:850; }
+    .sub { display:block; color:var(--muted); font-size:12px; font-weight:500; margin-top:3px; }
+    .money { white-space:nowrap; font-variant-numeric:tabular-nums; font-weight:850; }
+    .terms { min-width:210px; line-height:1.5; }
+    .chips { display:flex; flex-wrap:wrap; gap:5px; min-width:170px; }
+    .chip { min-height:22px; border-radius:999px; padding:2px 7px; background:#eef2f5; color:#3f4e62; font-size:12px; white-space:nowrap; }
+    svg { width:100%; display:block; }
+    #trendChart { height:260px; }
+    .axis { stroke:#d5dde6; stroke-width:1; }
+    .gridline { stroke:#edf1f5; stroke-width:1; }
+    .line { fill:none; stroke:var(--blue); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+    .point { fill:white; stroke:var(--blue); stroke-width:2; }
+    .axislabel { fill:var(--muted); font-size:11px; }
+    .bars,.mix { display:grid; gap:10px; }
+    .bar-row { display:grid; grid-template-columns:minmax(110px,1fr) minmax(120px,1.4fr) 88px; gap:9px; align-items:center; font-size:13px; }
+    .bar-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:850; }
+    .track { height:11px; border-radius:999px; background:#edf1f5; overflow:hidden; }
+    .fill { height:100%; border-radius:999px; background:var(--teal); }
+    .bar-value { text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+    .mix-item,.source-card,.api-card { border:1px solid var(--line); border-radius:8px; background:var(--soft); padding:10px; }
+    .mix-title { display:flex; justify-content:space-between; gap:8px; font-size:13px; font-weight:850; margin-bottom:8px; }
+    .source-grid,.api-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .source-card strong,.api-card strong { display:block; font-size:13px; margin-bottom:5px; color:var(--text); }
+    .source-card span,.api-card span { color:var(--muted); font-size:12px; line-height:1.5; }
+    pre { margin:0; max-height:320px; overflow:auto; background:#101820; color:#e6edf3; border-radius:8px; padding:12px; font-family:Consolas,"SFMono-Regular",monospace; font-size:12px; line-height:1.55; }
+    .hidden { display:none!important; }
+    .empty { padding:24px; text-align:center; color:var(--muted); }
+    @media (max-width:1180px) { .grid { grid-template-columns:1fr; } .wide { grid-row:auto; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:760px) { .shell { grid-template-columns:1fr; } .side { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } .main { padding:16px; } .top { display:grid; } .metrics,.filters,.source-grid,.api-grid { grid-template-columns:1fr; } .bar-row { grid-template-columns:1fr; } .bar-value { text-align:left; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <div class="brand"><div class="mark">BI</div><div><h1>鍖婚櫌渚涘簲閾捐繍钀?/h1><p>2026 鏁版嵁鍩哄簳琛ㄧ湅鏉?/p></div></div>
+      <nav class="nav">
+        <button class="active" data-section="overview">杩愯惀鎬昏</button>
+        <button data-section="detail">鍛ㄥ害鏄庣粏</button>
+        <button data-section="source">鏁版嵁鏉ユ簮</button>
+        <button data-section="port">鏁版嵁鑾峰彇绔彛</button>
+      </nav>
+      <div class="sidebox"><strong>鏁版嵁鍙ｅ緞</strong>鎸?Excel 鏄庣粏鑱氬悎 2026 YTD銆傞噾棰濅负杩愯惀鏀跺叆/GMV锛屽悎鍚岄噾棰濆拰鍏抽敭鏉℃鍦ㄦ湰搴曡〃涓湭鎻愪緵锛屽凡浣滀负寰呰ˉ鍏呭瓧娈典繚鐣欍€?/div>
+      <div class="sidebox"><strong>鏈€鏂板懆</strong><span id="sideWeek"></span><strong style="margin-top:10px">鐢熸垚鏃ユ湡</strong>2026-07-16</div>
+    </aside>
+    <main class="main">
+      <div class="top"><div><h2>鍖婚櫌渚涘簲閾捐繍钀ユ暟鎹湅鏉?/h2><p>鏉ユ簮锛?026-鏁版嵁鍩哄簳琛?xlsx銆傛敮鎸佸尰闄€侀」鐩€佸搧绫汇€佸懆瓒嬪娍鍜?YTD 姹囨€绘煡鐪嬨€?/p></div><div class="actions"><button class="btn" id="resetBtn">閲嶇疆绛涢€?/button><button class="btn primary" onclick="window.print()">鎵撳嵃 / 鍙﹀瓨 PDF</button></div></div>
+
+      <section id="overviewSection">
+        <div class="metrics">
+          <div class="metric"><span>YTD 杩愯惀鏀跺叆 / GMV</span><strong id="kpiYtd">-</strong><small id="kpiRecords">-</small></div>
+          <div class="metric"><span>鏈€鏂板懆杩愯惀鏀跺叆</span><strong id="kpiWeek">-</strong><small id="kpiWow">-</small></div>
+          <div class="metric"><span>鍖婚櫌涓庨」鐩?/span><strong id="kpiProjects">-</strong><small id="kpiHospitals">-</small></div>
+          <div class="metric"><span>鍦ㄨ繍钀ヤ緵搴旈摼鍝佺被</span><strong id="kpiCategories">-</strong><small>鎸夐」鐩搧绫诲綊闆?/small></div>
+        </div>
+        <div class="grid">
+          <section class="panel wide"><div class="panel-head"><h3>鍖婚櫌椤圭洰鏄庣粏</h3><span class="pill blue" id="rowCountPill">-</span></div><div class="panel-body"><div class="filters"><input id="searchInput" placeholder="鎼滅储鍖婚櫌 / 椤圭洰 / 鍝佺被"><select id="projectFilter"><option value="">鍏ㄩ儴椤圭洰</option></select><select id="categoryFilter"><option value="">鍏ㄩ儴鍝佺被</option></select></div><div class="table-wrap"><table><thead><tr><th>鍖婚櫌鍚嶇О</th><th>绛剧害鍚堝悓閲戦</th><th>鍏抽敭鍚堝悓鏉℃</th><th>鍦ㄨ繍钀ヤ緵搴旈摼鍝佺被</th><th>椤圭洰</th><th>鏈€鏂板懆鏀跺叆</th><th>YTD 鏀跺叆</th></tr></thead><tbody id="rowsBody"></tbody></table></div></div></section>
+          <section class="panel"><div class="panel-head"><h3>姣忓懆杩愯惀鏀跺叆瓒嬪娍</h3><span class="pill" id="trendPill">鍏ㄩ儴椤圭洰</span></div><div class="panel-body"><svg id="trendChart" viewBox="0 0 640 260"></svg></div></section>
+          <section class="panel"><div class="panel-head"><h3>YTD 椤圭洰鎺掕</h3><span class="pill amber">Top 8</span></div><div class="panel-body"><div class="bars" id="rankingBars"></div></div></section>
+          <section class="panel"><div class="panel-head"><h3>鍝佺被鏀跺叆缁撴瀯</h3><span class="pill green">YTD</span></div><div class="panel-body"><div class="mix" id="categoryMix"></div></div></section>
+        </div>
+      </section>
+
+      <section id="detailSection" class="hidden"><section class="panel"><div class="panel-head"><h3>椤圭洰鍛ㄥ害鏄庣粏</h3><span class="pill blue">鎸夊綋鍓嶇瓫閫夎仈鍔?/span></div><div class="panel-body"><div class="table-wrap"><table><thead><tr><th>鍖婚櫌</th><th>椤圭洰</th><th>鍛?/th><th>鏀跺叆 / GMV</th></tr></thead><tbody id="weekRows"></tbody></table></div></div></section></section>
+      <section id="sourceSection" class="hidden"><section class="panel"><div class="panel-head"><h3>鏁版嵁鏉ユ簮 Sheet</h3><span class="pill">瀵煎叆鏄庣粏</span></div><div class="panel-body"><div class="source-grid" id="sourceCards"></div></div></section><section class="panel"><div class="panel-head"><h3>鏉ユ簮璐＄尞</h3><span class="pill amber">鎸夐噾棰?/span></div><div class="panel-body"><div class="mix" id="sourceMix"></div></div></section></section>
+      <section id="portSection" class="hidden"><section class="panel"><div class="panel-head"><h3>鏁版嵁鑾峰彇绔彛</h3><span class="pill blue">渚涘唴閮ㄧ郴缁熷鎺?/span></div><div class="panel-body"><div class="api-grid" id="apiCards"></div></div></section><section class="panel"><div class="panel-head"><h3>鎺ュ彛绀轰緥</h3><span class="pill amber">JSON</span></div><div class="panel-body"><pre id="apiExample"></pre></div></section><section class="panel"><div class="panel-head"><h3>Excel 瀛楁鏄犲皠</h3><span class="pill green">鏈簳琛?/span></div><div class="panel-body"><div class="table-wrap"><table><thead><tr><th>Sheet</th><th>鍖婚櫌</th><th>椤圭洰</th><th>鍛?/th><th>閲戦</th><th>鍝佺被</th></tr></thead><tbody id="mappingRows"></tbody></table></div></div></section></section>
+    </main>
+  </div>
+  <script>
+    const DATA = {"generatedDate": "2026-07-16", "inputFile": "2026-鏁版嵁鍩哄簳琛?xlsx", "summary": {"hospitalCount": 9, "projectCount": 14, "categoryCount": 14, "rawRecordCount": 2642, "rawRecordCount2026": 2220, "weeklyRevenueCount": 160, "totalYtdRevenue": 2070986.29, "selectedWeekRevenue": 27974.79, "wowChange": -59.2, "selectedWeek": "2026-W24", "previousWeek": "2026-W23"}, "rows": [{"hospitalName": "澶╂触涓尰涓€闄勯櫌", "contractAmount": null, "keyTerms": "寰呭悎鍚屾壂鎻忎欢/OCR鎴栧悎鍚屼富鏁版嵁琛ュ厖", "projectName": "浜掕仈缃戝尰闄?.0", "categories": ["鑽搧", "闂瘖"], "sources": ["浜掑尰2.0"], "selectedWeekRevenue": 0, "ytdRevenue": 1229183.84, "weeklySeries": [{"week": "2026-W01", "amount": 94588.0}, {"week": "2026-W02", "amount": 101350.0}, {"week": "2026-W03", "amount": 109210.0}, {"week": "2026-W04", "amount": 101445.0}, {"week": "2026-W05", "amount": 101648.25}, {"week": "2026-W06", "amount": 101648.25}, {"week": "2026-W07", "amount": 0}, {"week": "2026-W08", "amount": 88470.62}, {"week": "2026-W09", "amount": 88470.62}, {"week": "2026-W10", "amount": 88470.62}, {"week": "2026-W11", "amount": 88470.62}, {"week": "2026-W12", "amount": 88470.62}, {"week": "2026-W13", "amount": 88470.62}, {"week": "2026-W14", "amount": 88470.62}, {"week": "2026-W15", "amount": 0}, {"week": "2026-W16", "amount": 0}, {"week": "2026-W17", "amount": 0}, {"week": "2026-W18", "amount": 0}, {"week": "2026-W19", "amount": 0}, {"week": "2026-W20", "amount": 0}, {"week": "2026-W21", "amount": 0}, {"week": "2026-W22", "amount": 0}, {"week": "2026-W23", "amount": 0}, {"week": "2026-W24", "amount": 0}]}, {"hospitalName": "娲涢槼姝ｉ鍖婚櫌", "contractAmount": null, "keyTerms": "寰呭悎鍚屾壂鎻忎欢/OCR鎴栧悎鍚屼富鏁版嵁琛ュ厖", "projectName": "鎱ч噰", "categories": ["涓村簥妫€楠?, "鍏夊璁惧", "鍖荤枟璁惧", "鎬ヨ瘖鎬ユ晳", "鐗╃悊娌荤枟/搴峰璁惧", "鐥呮埧纭欢", "鐩戞姢妫€鏌ヨ澶?, "闄㈢鍖荤枟鍣ㄦ"], "sources": ["鎱ч噰"], "selectedWeekRevenue": 0, "ytdRevenue": 223105.0, "weeklySeries": [{"week": "2026-W01", "amount": 12030.0}, {"week": "2026-W02", "amount": 4900.0}, {"week": "2026-W03", "amount": 0}, {"week": "2026-W04", "amount": 84064.0}, {"week": "2026-W05", "amount": 37316.0}, {"week": "2026-W06", "amount": -9600.0}, {"week": "2026-W07", "amount": 0}, {"week": "2026-W08", "amount": 0}, {"week": "2026-W09", "amount": 48000.0}, {"week": "2026-W10", "amount": 0}, {"week": "2026-W11", "amount": 23414.0}, {"week": "2026-W12", "amount": 14161.0}, {"week": "2026-W13", "amount": 8820.0}, {"week": "2026-W14", "amount": 0}, {"week": "2026-W15", "amount": 0}, {"week": "2026-W16", "amount": 0}, {"week": "2026-W17", "amount": 0}, {"week": "2026-W18", "amount": 0}, {"week": "2026-W19", "amount": 0}, {"week": "2026-W20", "amount": 0}, {"week": "2026-W21", "amount": 0}, {"week": "2026-W22", "amount": 0}, {"week": "2026-W23", "amount": 0}, {"week": "2026-W24", "amount": 0}]}, {"hospitalName": "鍖椾含鍦板潧鍖婚櫌", "contractAmount": null, "keyTerms": "寰呭悎鍚屾壂鎻忎欢/OCR鎴栧悎鍚屼富鏁版嵁琛ュ厖", "projectName": "澶勬柟娴佽浆", "categories": ["鑽搧"], "sources": ["澶勬柟娴佽浆璁㈠崟琛?], "selectedWeekRevenue": 0, "ytdRevenue": 194288.43, "weeklySeries": [{"week": "2026-W01", "amount": 9327.59}, {"week": "2026-W02", "amount": 15787.07}, {"week": "2026-W03", "amount": 5663.7}, {"week": "2026-W04", "amount": 9462.75}, {"week": "2026-W05", "amount": 13980.15}, {"week": "2026-W06", "amount": 12915.5}, {"week": "2026-W07", "amount": 1132.74}, {"week": "2026-W08", "amount": 5428.38}, {"week": "2026-W09", "amount": 5851.74}, {"week": "2026-W10", "amount": 7852.29}, {"week": "2026-W11", "amount": 9169.25}, {"week": "2026-W12", "amount": 8374.38}, {"week": "2026-W13", "amount": 7017.18}, {"week": "2026-W14", "amount": 6931.68}, {"week": "2026-W15", "amount": 4241.94}, {"week": "2026-W16", "amount": 15611.51}, {"week": "2026-W17", "amount": 7194.41}, {"week": "2026-W18", "amount": 5441.82}, {"week": "2026-W19", "amount": 10596.35}, {"week": "2026-W20", "amount": 4530.96}, {"week": "2026-W21", "amount": 5353.74}, {"week": "2026-W22", "amount": 17069.94}, {"week": "2026-W23", "amount": 5353.36}, {"week": "2026-W24", "amount": 0}]}, {"hospitalName": "鏈綊灞炲尰闄?, "contractAmount": null, "keyTerms": "寰呭悎鍚屾壂鎻忎欢/OCR鎴栧悎鍚屼富鏁版嵁琛ュ厖", "projectName": "浜戜氦鏄?, "categories": ["浜戜氦鏄?], "sources": ["浜戜氦鏄?], "selectedWeekRevenue": 2908.0, "ytdRevenue": 149585.27, "weeklySeries": [{"week": "2026-W01", "amount": 864.0}, {"week": "2026-W02", "amount": 972.0}, {"week": "2026-W03", "amount": 540.0}, {"week": "2026-W04", "amount": 720.0}, {"week": "2026-W05", "amount": 180.0}, {"week": "2026-W06", "amount": 1548.0}, {"week": "2026-W07", "amount": 1314.0}, {"week": "2026-W08", "amount": 648.0}, {"week": "2026-W09", "amount": 2124.0}, {"week": "2026-W10", "amount": 1272.0}, {"week": "2026-W11", "amount": 2268.0}, {"week": "2026-W12", "amount": 6188.45}, {"week": "2026-W13", "amount": 4811.45}, {"week": "2026-W14", "amount": 3642.0}, {"week": "2026-W15", "amount": 3984.0}, {"week": "2026-W16", "amount": 7269.91}, {"week": "2026-W17", "amount": 9336.11}, {"week": "2026-W18", "amount": 7366.8}, {"week": "2026-W19", "amount": 12074.42}, {"week": "2026-W20", "amount": 14988.33}, {"week": "2026-W21", "amount": 18254.95}, {"week": "2026-W22", "amount": 8740.6}, {"week": "2026-W23", "amount": 37570.25}, {"week": "2026-W24", "amount": 2908.0}]}, {"hospitalName": "娲涢槼姝ｉ鍖婚櫌", "contractAmount": null, "keyTerms": "寰呭悎鍚屾壂鎻忎欢/OCR鎴栧悎鍚屼富鏁版嵁琛ュ厖", "projectName": "BBC鍟嗗煄", "categories": ["鍟嗗煄"], "sources": ["BBC鍟嗗煄鍘熺増璁㈠崟琛?], "selectedWeekRevenue": 1546.07, "ytdRevenue": 76355.3, "weeklySeries": [{"week": "2026-W01", "amount": 183.0}, {"week": "2026-W02", "amount": 674.39}, {"week": "2026-W03", "amount": 0}, {"week": "2026-W04", "amount": 0}, {"week": "2026-W05", "amount": 49.9}, {"week": "2026-W06", "amount": 0}, {"week": "2026-W07", "amount": 413.18}, {"week": "2026-W08", "amount": 0}, {"week": "2026-W09", "amount": 609.6}, {"week": "2026-W10", "amount": 2353.58}, {"week": "2026-W11", "amount": 1799.38}, {"week": "2026-W12", "amount": 2823.3}, {"week": "2026-W13", "amount": 7469.1}, {"week": "2026-W14", "amount": 4644.0}, {"week": "2026-W15", "amount": 8921.18}, {"week": "2026-W16", "amount": 10515.48}, {"week": "2026-W17", "amount": 2862.3}, {"week": "2026-W18", "amount": 1103.66}, {"week": "2026-W19", "amount": 10235.81}, {"week": "2026-W20", "amount": 1481.07}, {"week": "2026-W21", "amount": 4439.89}, {"week": "2026-W22", "amount": 6550.59}, {"week": "2026-W23", "amount": 7679.82}, {"week": "2026-W24", "amount": 1546.07}]}, {"hospitalName": "鐝犳捣甯備汉姘戝尰闄?, "contractAmount": null, "keyTerms": "寰呭悎鍚屾壂鎻忎欢/OCR鎴栧悎鍚屼富鏁版…1843 tokens truncated…嵁琛ュ厖", "projectName": "澶勬柟娴佽浆", "categories": ["鑽搧"], "sources": ["鍖楀効澶勬柟"], "selectedWeekRevenue": 4008.72, "ytdRevenue": 10961.05, "weeklySeries": [{"week": "2026-W01", "amount": 0}, {"week": "2026-W02", "amount": 0}, {"week": "2026-W03", "amount": 0}, {"week": "2026-W04", "amount": 0}, {"week": "2026-W05", "amount": 0}, {"week": "2026-W06", "amount": 0}, {"week": "2026-W07", "amount": 0}, {"week": "2026-W08", "amount": 0}, {"week": "2026-W09", "amount": 0}, {"week": "2026-W10", "amount": 0}, {"week": "2026-W11", "amount": 0}, {"week": "2026-W12", "amount": 0}, {"week": "2026-W13", "amount": 0}, {"week": "2026-W14", "amount": 0}, {"week": "2026-W15", "amount": 0}, {"week": "2026-W16", "amount": 0}, {"week": "2026-W17", "amount": 0}, {"week": "2026-W18", "amount": 0}, {"week": "2026-W19", "amount": 0}, {"week": "2026-W20", "amount": 0}, {"week": "2026-W21", "amount": 0}, {"week": "2026-W22", "amount": 1155.27}, {"week": "2026-W23", "amount": 5797.06}, {"week": "2026-W24", "amount": 4008.72}]}, {"hospitalName": "鍖椾含鍦板潧鍖婚櫌", "contractAmount": null, "keyTerms": "寰呭悎鍚屾壂鎻忎欢/OCR鎴栧悎鍚屼富鏁版嵁琛ュ厖", "projectName": "HIV鎮ｈ€呮湇鍔?, "categories": ["HIV杩愯惀"], "sources": ["鍦板潧HIV"], "selectedWeekRevenue": 0, "ytdRevenue": 9302.11, "weeklySeries": [{"week": "2026-W01", "amount": 0}, {"week": "2026-W02", "amount": 1863.05}, {"week": "2026-W03", "amount": 109.0}, {"week": "2026-W04", "amount": 321.6}, {"week": "2026-W05", "amount": 47.0}, {"week": "2026-W06", "amount": 368.61}, {"week": "2026-W07", "amount": 60.9}, {"week": "2026-W08", "amount": 1667.1}, {"week": "2026-W09", "amount": 0}, {"week": "2026-W10", "amount": 1052.15}, {"week": "2026-W11", "amount": 975.0}, {"week": "2026-W12", "amount": 2706.7}, {"week": "2026-W13", "amount": 131.0}, {"week": "2026-W14", "amount": 0}, {"week": "2026-W15", "amount": 0}, {"week": "2026-W16", "amount": 0}, {"week": "2026-W17", "amount": 0}, {"week": "2026-W18", "amount": 0}, {"week": "2026-W19", "amount": 0}, {"week": "2026-W20", "amount": 0}, {"week": "2026-W21", "amount": 0}, {"week": "2026-W22", "amount": 0}, {"week": "2026-W23", "amount": 0}, {"week": "2026-W24", "amount": 0}]}, {"hospitalName": "涓滆帪甯傜鍏汉姘戝尰闄?, "contractAmount": null, "keyTerms": "寰呭悎鍚屾壂鎻忎欢/OCR鎴栧悎鍚屼富鏁版嵁琛ュ厖", "projectName": "BBC鍟嗗煄", "categories": ["鍟嗗煄"], "sources": ["BBC鍟嗗煄鍘熺増璁㈠崟琛?], "selectedWeekRevenue": 1214.0, "ytdRevenue": 6264.4, "weeklySeries": [{"week": "2026-W01", "amount": 0}, {"week": "2026-W02", "amount": 0}, {"week": "2026-W03", "amount": 0}, {"week": "2026-W04", "amount": 0}, {"week": "2026-W05", "amount": 0}, {"week": "2026-W06", "amount": 0}, {"week": "2026-W07", "amount": 0}, {"week": "2026-W08", "amount": 0}, {"week": "2026-W09", "amount": 0}, {"week": "2026-W10", "amount": 0}, {"week": "2026-W11", "amount": 0}, {"week": "2026-W12", "amount": 0}, {"week": "2026-W13", "amount": 0}, {"week": "2026-W14", "amount": 0}, {"week": "2026-W15", "amount": 0}, {"week": "2026-W16", "amount": 0}, {"week": "2026-W17", "amount": 0}, {"week": "2026-W18", "amount": 0}, {"week": "2026-W19", "amount": 0}, {"week": "2026-W20", "amount": 0}, {"week": "2026-W21", "amount": 0}, {"week": "2026-W22", "amount": 4589.4}, {"week": "2026-W23", "amount": 461.0}, {"week": "2026-W24", "amount": 1214.0}]}], "trend": [{"week": "2026-W01", "amount": 116992.59}, {"week": "2026-W02", "amount": 125546.51}, {"week": "2026-W03", "amount": 117083.9}, {"week": "2026-W04", "amount": 196221.51}, {"week": "2026-W05", "amount": 160298.2}, {"week": "2026-W06", "amount": 107446.48}, {"week": "2026-W07", "amount": 3287.62}, {"week": "2026-W08", "amount": 96214.1}, {"week": "2026-W09", "amount": 148378.0}, {"week": "2026-W10", "amount": 104185.26}, {"week": "2026-W11", "amount": 127705.89}, {"week": "2026-W12", "amount": 137974.32}, {"week": "2026-W13", "amount": 129281.71}, {"week": "2026-W14", "amount": 147003.09}, {"week": "2026-W15", "amount": 32553.63}, {"week": "2026-W16", "amount": 34221.74}, {"week": "2026-W17", "amount": 21186.75}, {"week": "2026-W18", "amount": 16121.68}, {"week": "2026-W19", "amount": 34256.34}, {"week": "2026-W20", "amount": 45860.16}, {"week": "2026-W21", "amount": 30128.35}, {"week": "2026-W22", "amount": 42492.42}, {"week": "2026-W23", "amount": 68571.25}, {"week": "2026-W24", "amount": 27974.79}], "categoryMix": [{"category": "鑽搧", "amount": 845206.24}, {"category": "闂瘖", "amount": 614591.92}, {"category": "鍟嗗煄", "amount": 217407.8}, {"category": "浜戜氦鏄?, "amount": 149585.27}, {"category": "鍖荤枟璁惧", "amount": 74368.33}, {"category": "闄㈢鍖荤枟鍣ㄦ", "amount": 74368.33}, {"category": "鎬ヨ瘖鎬ユ晳", "amount": 22166.67}, {"category": "鐗╃悊娌荤枟/搴峰璁惧", "amount": 15669.33}, {"category": "鍏夊璁惧", "amount": 14336.67}, {"category": "鐥呮埧纭欢", "amount": 13115.67}, {"category": "鍖讳繚鍙岄€氶亾", "amount": 11787.95}, {"category": "HIV杩愯惀", "amount": 9302.11}, {"category": "鐩戞姢妫€鏌ヨ澶?, "amount": 5880.0}, {"category": "涓村簥妫€楠?, "amount": 3200.0}], "sourceMix": [{"source": "浜掑尰2.0", "amount": 1229183.84, "rows": 13}, {"source": "鎱ч噰", "amount": 223105.0, "rows": 20}, {"source": "BBC鍟嗗煄鍘熺増璁㈠崟琛?, "amount": 217407.8, "rows": 1353}, {"source": "澶勬柟娴佽浆璁㈠崟琛?, "amount": 207865.32, "rows": 378}, {"source": "浜戜氦鏄?, "amount": 149585.27, "rows": 329}, {"source": "鐝犳捣鍙岄€氶亾", "amount": 23575.9, "rows": 66}, {"source": "鍖楀効澶勬柟", "amount": 10961.05, "rows": 35}, {"source": "鍦板潧HIV", "amount": 9302.11, "rows": 26}], "sheets": [{"sheet": "澶勬柟娴佽浆璁㈠崟琛?, "rows": 378, "importedRows": 378}, {"sheet": "BBC鍟嗗煄鍘熺増璁㈠崟琛?, "rows": 1669, "importedRows": 1669}, {"sheet": "浜戜氦鏄?, "rows": 426, "importedRows": 337}, {"sheet": "鍖楀効澶勬柟", "rows": 35, "importedRows": 35}, {"sheet": "鐝犳捣鍙岄€氶亾", "rows": 66, "importedRows": 66}, {"sheet": "鎱ч噰", "rows": 67, "importedRows": 67}, {"sheet": "鍦板潧HIV", "rows": 87, "importedRows": 26}, {"sheet": "浜掑尰2.0", "rows": 65, "importedRows": 64}]};
+    const SPEC = {"name": "hospital_supply_chain_data_port", "version": "1.1.0", "unit": "CNY", "generatedDate": "2026-07-16", "dashboardFields": ["鍖婚櫌鍚嶇О", "绛剧害鍚堝悓閲戦", "鍏抽敭鍚堝悓鏉℃", "鍦ㄨ繍钀ョ殑渚涘簲閾惧搧绫?, "姣忎釜椤圭洰姣忓懆杩愯惀鏀跺叆", "YTD杩愯惀鏀跺叆"], "endpoints": [{"method": "POST", "path": "/api/contracts/upsert", "purpose": "鍐欏叆鎴栨洿鏂板尰闄㈠悎鍚屼富鏁版嵁", "payloadExample": {"hospitalName": "涓婃捣鐟為噾鍖婚櫌", "projectName": "鑰楁潗 SPD 杩愯惀椤圭洰", "contractAmount": 42000000, "keyTerms": "SPD鎵樼浠擄紱鍥炴鍛ㄦ湡45澶╋紱骞村害淇濆簳閲?200涓?, "categories": ["楂樺€艰€楁潗", "浣庡€艰€楁潗", "璇曞墏"], "source": {"type": "contract_scan_ocr", "confidence": 0.91}}}, {"method": "POST", "path": "/api/revenue/weekly", "purpose": "鍐欏叆姣忎釜鍖婚櫌椤圭洰鐨勫懆杩愯惀鏀跺叆", "payloadExample": {"hospitalName": "涓婃捣鐟為噾鍖婚櫌", "projectName": "鑰楁潗 SPD 杩愯惀椤圭洰", "week": "2026-W25", "amount": 1885000, "submittedBy": "杩愯惀璐熻矗浜?}}, {"method": "POST", "path": "/api/import/base-excel", "purpose": "瀵煎叆鏈绫诲瀷鐨?Excel 鏁版嵁鍩哄簳琛紝鑷姩鎷嗚В鍖婚櫌銆侀」鐩€佸懆鏈熷拰閲戦"}], "fieldMapping": [{"sheet": "澶勬柟娴佽浆璁㈠崟琛?, "hospital": "鍖婚櫌鍚嶇О", "project": "澶勬柟娴佽浆", "week": "鏃堕棿鍛ㄦ湡", "amount": "澶勬柟鑽搧閲戦", "category": "鑽搧"}, {"sheet": "BBC鍟嗗煄鍘熺増璁㈠崟琛?, "hospital": "浼佷笟鍚嶇О", "project": "BBC鍟嗗煄", "week": "鏃堕棿鍛ㄦ湡", "amount": "璁㈠崟瀹炰粯閲戦/鍟嗗搧GMV/璁㈠崟鎬婚噾棰?, "category": "鍟嗗煄"}, {"sheet": "浜戜氦鏄?, "hospital": "鏈綊灞炲尰闄?, "project": "浜戜氦鏄?, "week": "鏃堕棿鍛ㄦ湡", "amount": "搴旀敹閲戦/璁㈠崟鐢ㄦ埛瀹炰粯閲戦", "category": "浜戜氦鏄?}, {"sheet": "鍖楀効澶勬柟", "hospital": "鍖椾含鍎跨鍖婚櫌", "project": "澶勬柟娴佽浆", "week": "鏃堕棿鍛ㄦ湡", "amount": "閲戦", "category": "鑽搧"}, {"sheet": "鐝犳捣鍙岄€氶亾", "hospital": "鐝犳捣甯備汉姘戝尰闄?, "project": "鍙岄€氶亾", "week": "鏃堕棿鍛ㄦ湡", "amount": "灏忚閲戦/鎬婚噾棰?, "category": "鑽搧銆佸尰淇濆弻閫氶亾"}, {"sheet": "鎱ч噰", "hospital": "鍖婚櫌", "project": "鎱ч噰", "week": "鏃堕棿鍛ㄦ湡/statdate", "amount": "gmv_sum", "category": "item_second_cate_name/item_third_cate_name"}, {"sheet": "鍦板潧HIV", "hospital": "鍖椾含鍦板潧鍖婚櫌", "project": "HIV鎮ｈ€呮湇鍔?, "week": "鏃堕棿鍛ㄦ湡", "amount": "寮曞鎴愪氦璁㈠崟閲戦", "category": "HIV杩愯惀"}, {"sheet": "浜掑尰2.0", "hospital": "鍖婚櫌", "project": "浜掕仈缃戝尰闄?.0", "week": "鏃堕棿鍛ㄦ湡", "amount": "鎬婚棶璇奊MV+鎬昏嵂鍝丟MV", "category": "闂瘖銆佽嵂鍝?}]};
+    const colors = ["#00796b","#2563eb","#b45309","#16803c","#c2410c","#7c3aed","#0f766e","#475569"];
+    const els = {
+      sideWeek: document.getElementById("sideWeek"), kpiYtd: document.getElementById("kpiYtd"), kpiRecords: document.getElementById("kpiRecords"), kpiWeek: document.getElementById("kpiWeek"), kpiWow: document.getElementById("kpiWow"), kpiProjects: document.getElementById("kpiProjects"), kpiHospitals: document.getElementById("kpiHospitals"), kpiCategories: document.getElementById("kpiCategories"), searchInput: document.getElementById("searchInput"), projectFilter: document.getElementById("projectFilter"), categoryFilter: document.getElementById("categoryFilter"), rowsBody: document.getElementById("rowsBody"), rowCountPill: document.getElementById("rowCountPill"), trendChart: document.getElementById("trendChart"), trendPill: document.getElementById("trendPill"), rankingBars: document.getElementById("rankingBars"), categoryMix: document.getElementById("categoryMix"), weekRows: document.getElementById("weekRows"), sourceCards: document.getElementById("sourceCards"), sourceMix: document.getElementById("sourceMix"), apiCards: document.getElementById("apiCards"), apiExample: document.getElementById("apiExample"), mappingRows: document.getElementById("mappingRows")
+    };
+    init();
+    function init() {
+      document.querySelectorAll(".nav button").forEach((btn) => btn.addEventListener("click", () => switchSection(btn.dataset.section)));
+      document.getElementById("resetBtn").addEventListener("click", () => { els.searchInput.value = ""; els.projectFilter.value = ""; els.categoryFilter.value = ""; renderAll(); });
+      [els.searchInput, els.projectFilter, els.categoryFilter].forEach((el) => el.addEventListener("input", renderAll));
+      fillFilters(); renderKpis(); renderAll(); renderSources(); renderPorts();
+    }
+    function switchSection(name) {
+      document.querySelectorAll(".nav button").forEach((btn) => btn.classList.toggle("active", btn.dataset.section === name));
+      ["overview","detail","source","port"].forEach((section) => document.getElementById(section + "Section").classList.toggle("hidden", section !== name));
+    }
+    function fillFilters() {
+      const projects = [...new Set(DATA.rows.map((row) => row.projectName))].sort();
+      const cats = [...new Set(DATA.rows.flatMap((row) => row.categories))].sort();
+      els.projectFilter.innerHTML = '<option value="">鍏ㄩ儴椤圭洰</option>' + projects.map((value) => `<option>${escapeHtml(value)}</option>`).join("");
+      els.categoryFilter.innerHTML = '<option value="">鍏ㄩ儴鍝佺被</option>' + cats.map((value) => `<option>${escapeHtml(value)}</option>`).join("");
+    }
+    function renderKpis() {
+      const s = DATA.summary;
+      els.sideWeek.textContent = s.selectedWeek || "-";
+      els.kpiYtd.textContent = fmtMoney(s.totalYtdRevenue);
+      els.kpiRecords.textContent = `${s.rawRecordCount2026} 鏉?2026 鏄庣粏锛?{s.weeklyRevenueCount} 鏉″懆姹囨€籤;
+      els.kpiWeek.textContent = fmtMoney(s.selectedWeekRevenue);
+      els.kpiWow.textContent = `${s.selectedWeek}锛岀幆姣?${s.wowChange > 0 ? "+" : ""}${s.wowChange}%`;
+      els.kpiProjects.textContent = `${s.projectCount} 涓猔;
+      els.kpiHospitals.textContent = `${s.hospitalCount} 瀹跺尰闄;
+      els.kpiCategories.textContent = `${s.categoryCount} 绫籤;
+    }
+    function filteredRows() {
+      const q = els.searchInput.value.trim().toLowerCase();
+      const p = els.projectFilter.value;
+      const c = els.categoryFilter.value;
+      return DATA.rows.filter((row) => (!p || row.projectName === p) && (!c || row.categories.includes(c)) && (!q || `${row.hospitalName} ${row.projectName} ${row.categories.join(" ")}`.toLowerCase().includes(q)));
+    }
+    function renderAll() { const rows = filteredRows(); renderRows(rows); renderTrend(rows); renderRanking(rows); renderCategoryMix(rows); renderWeekRows(rows); }
+    function renderRows(rows) {
+      els.rowCountPill.textContent = `${rows.length} 涓」鐩甡;
+      els.rowsBody.innerHTML = rows.map((row) => `<tr><td>${escapeHtml(row.hospitalName)}<span class="sub">${escapeHtml((row.sources || []).join("銆?))}</span></td><td class="money">${row.contractAmount == null ? "寰呰ˉ鍏? : fmtMoney(row.contractAmount)}</td><td class="terms">${escapeHtml(row.keyTerms)}</td><td><div class="chips">${row.categories.map((category) => `<span class="chip">${escapeHtml(category)}</span>`).join("")}</div></td><td>${escapeHtml(row.projectName)}</td><td class="money">${fmtMoney(row.selectedWeekRevenue)}</td><td class="money">${fmtMoney(row.ytdRevenue)}</td></tr>`).join("") || '<tr><td colspan="7"><div class="empty">鏆傛棤鍖归厤鏁版嵁</div></td></tr>';
+    }
+    function renderTrend(rows) {
+      const totals = DATA.trend.map((point) => ({ week: point.week, amount: rows.reduce((sum, row) => sum + ((row.weeklySeries.find((item) => item.week === point.week) || { amount: 0 }).amount || 0), 0) }));
+      els.trendPill.textContent = rows.length === DATA.rows.length ? "鍏ㄩ儴椤圭洰" : `${rows.length} 涓」鐩甡;
+      drawLine(els.trendChart, totals);
+    }
+    function drawLine(svg, points) {
+      const W = 640, H = 260, p = { l: 48, r: 20, t: 22, b: 42 };
+      const cw = W - p.l - p.r, ch = H - p.t - p.b;
+      const max = Math.max(...points.map((point) => point.amount), 1);
+      const plot = points.map((point, index) => ({ ...point, x: p.l + index * (cw / Math.max(points.length - 1, 1)), y: p.t + ch - (point.amount / max) * ch }));
+      const grid = [0,.25,.5,.75,1].map((ratio) => { const y = p.t + ch - ratio * ch; return `<line class="gridline" x1="${p.l}" x2="${W - p.r}" y1="${y}" y2="${y}"></line><text class="axislabel" x="8" y="${y + 4}">${Math.round(max * ratio)}</text>`; }).join("");
+      const path = plot.map((point, index) => `${index ? "L" : "M"} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
+      const labels = plot.map((point, index) => (index % Math.ceil(plot.length / 6 || 1) === 0 || index === plot.length - 1) ? `<text class="axislabel" text-anchor="middle" x="${point.x.toFixed(1)}" y="${H - 15}">${point.week.replace(/^\d{4}-/, "")}</text>` : "").join("");
+      const circles = plot.map((point) => `<circle class="point" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="4"><title>${escapeHtml(point.week)}锛?{fmtMoney(point.amount)}</title></circle>`).join("");
+      svg.innerHTML = `${grid}<line class="axis" x1="${p.l}" x2="${W - p.r}" y1="${H - p.b}" y2="${H - p.b}"></line><line class="axis" x1="${p.l}" x2="${p.l}" y1="${p.t}" y2="${H - p.b}"></line><path class="line" d="${path}"></path>${circles}${labels}`;
+    }
+    function renderRanking(rows) { const top = [...rows].sort((a,b) => b.ytdRevenue - a.ytdRevenue).slice(0,8); const max = Math.max(...top.map((row) => row.ytdRevenue), 1); els.rankingBars.innerHTML = top.map((row) => `<div class="bar-row"><div class="bar-name" title="${escapeHtml(row.hospitalName)}">${escapeHtml(row.hospitalName)}<span class="sub">${escapeHtml(row.projectName)}</span></div><div class="track"><div class="fill" style="width:${Math.max(row.ytdRevenue / max * 100, 2)}%"></div></div><div class="bar-value">${fmtMoney(row.ytdRevenue)}</div></div>`).join(""); }
+    function renderCategoryMix(rows) { const totals = {}; rows.forEach((row) => { const share = row.ytdRevenue / Math.max(row.categories.length, 1); row.categories.forEach((category) => totals[category] = (totals[category] || 0) + share); }); const items = Object.entries(totals).sort((a,b) => b[1] - a[1]).slice(0,8); const max = Math.max(...items.map((item) => item[1]), 1); els.categoryMix.innerHTML = items.map(([name, value], index) => `<div class="mix-item"><div class="mix-title"><span>${escapeHtml(name)}</span><span>${fmtMoney(value)}</span></div><div class="track"><div class="fill" style="width:${Math.max(value / max * 100, 2)}%;background:${colors[index % colors.length]}"></div></div></div>`).join(""); }
+    function renderWeekRows(rows) { const items = []; rows.forEach((row) => row.weeklySeries.forEach((week) => { if (week.amount) items.push({ hospital: row.hospitalName, project: row.projectName, week: week.week, amount: week.amount }); })); items.sort((a,b) => b.week.localeCompare(a.week) || b.amount - a.amount); els.weekRows.innerHTML = items.map((item) => `<tr><td>${escapeHtml(item.hospital)}</td><td>${escapeHtml(item.project)}</td><td>${escapeHtml(item.week)}</td><td class="money">${fmtMoney(item.amount)}</td></tr>`).join(""); }
+    function renderSources() { els.sourceCards.innerHTML = DATA.sheets.map((sheet) => `<div class="source-card"><strong>${escapeHtml(sheet.sheet)}</strong><span>${sheet.importedRows} 琛岃繘鍏ョ湅鏉?/ ${sheet.rows} 琛屽簳琛ㄨ褰?/span></div>`).join(""); const max = Math.max(...DATA.sourceMix.map((item) => item.amount), 1); els.sourceMix.innerHTML = DATA.sourceMix.map((item, index) => `<div class="mix-item"><div class="mix-title"><span>${escapeHtml(item.source)}</span><span>${fmtMoney(item.amount)}</span></div><div class="track"><div class="fill" style="width:${Math.max(item.amount / max * 100, 2)}%;background:${colors[index % colors.length]}"></div></div><div class="sub">${item.rows} 鏉℃槑缁?/div></div>`).join(""); }
+    function renderPorts() { els.apiCards.innerHTML = SPEC.endpoints.map((item) => `<div class="api-card"><strong>${escapeHtml(item.method)} ${escapeHtml(item.path)}</strong><span>${escapeHtml(item.purpose)}</span></div>`).join(""); els.apiExample.textContent = JSON.stringify(SPEC.endpoints.slice(0,2).map((item) => item.payloadExample), null, 2); els.mappingRows.innerHTML = SPEC.fieldMapping.map((row) => `<tr><td>${escapeHtml(row.sheet)}</td><td>${escapeHtml(row.hospital)}</td><td>${escapeHtml(row.project)}</td><td>${escapeHtml(row.week)}</td><td>${escapeHtml(row.amount)}</td><td>${escapeHtml(row.category)}</td></tr>`).join(""); }
+    function fmtMoney(value) { const amount = Number(value || 0); if (amount >= 100000000) return (amount / 100000000).toFixed(2) + " 浜垮厓"; if (amount >= 10000) return (amount / 10000).toFixed(2) + " 涓囧厓"; return amount.toLocaleString("zh-CN", { maximumFractionDigits: 2 }) + " 鍏?; }
+    function escapeHtml(value) { return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+  </script>
+</body>
+</html>
