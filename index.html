@@ -32,6 +32,7 @@
     .actions { display:flex; gap:8px; flex-wrap:wrap; }
     .btn { min-height:36px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--text); padding:8px 12px; font-weight:800; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
     .btn.primary { background:var(--teal); color:#fff; border-color:var(--teal); }
+    .btn:disabled { cursor:not-allowed; opacity:.62; }
     .upload-callout { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:18px; border:1px solid #b8d9d4; border-radius:8px; background:#eef8f6; }
     .upload-callout strong { display:block; margin-bottom:5px; font-size:15px; }
     .upload-callout p { margin:0; color:var(--muted); font-size:13px; line-height:1.55; }
@@ -102,7 +103,7 @@
       <div class="sidebox"><strong>最新周</strong><span id="sideWeek"></span><strong style="margin-top:10px">最近更新</strong><span id="generatedDate"></span></div>
     </aside>
     <main class="main">
-      <div class="top"><div><h2>医院供应链运营数据看板</h2><p>数据由每周 Excel 底表自动更新，支持医院、项目、品类、周趋势和 YTD 汇总查看。</p></div><div class="actions"><button class="btn" id="resetBtn">重置筛选</button><a class="btn primary" href="https://github.com/lucyxlxue-prog/hospital-ops-dashboard-2026/upload/main/input" target="_blank" rel="noopener">上传本周 Excel</a></div></div>
+      <div class="top"><div><h2>医院供应链运营数据看板</h2><p>数据由每周 Excel 底表自动更新，支持医院、项目、品类、周趋势和 YTD 汇总查看。</p></div><div class="actions"><button class="btn" id="resetBtn">重置筛选</button><button class="btn primary" type="button" onclick="switchSection('port')">每周数据更新</button></div></div>
 
       <section id="overviewSection">
         <div class="metrics">
@@ -121,7 +122,7 @@
 
       <section id="detailSection" class="hidden"><section class="panel"><div class="panel-head"><h3>项目周度明细</h3><span class="pill blue">按当前筛选联动</span></div><div class="panel-body"><div class="table-wrap"><table><thead><tr><th>医院</th><th>项目</th><th>周</th><th>收入 / GMV</th></tr></thead><tbody id="weekRows"></tbody></table></div></div></section></section>
       <section id="sourceSection" class="hidden"><section class="panel"><div class="panel-head"><h3>数据来源 Sheet</h3><span class="pill">导入明细</span></div><div class="panel-body"><div class="source-grid" id="sourceCards"></div></div></section><section class="panel"><div class="panel-head"><h3>来源贡献</h3><span class="pill amber">按金额</span></div><div class="panel-body"><div class="mix" id="sourceMix"></div></div></section></section>
-      <section id="portSection" class="hidden"><section class="panel"><div class="panel-head"><h3>每周 Excel 上传端口</h3><span class="pill blue">自动刷新</span></div><div class="panel-body"><div class="upload-callout"><div><strong>上传各系统最新导出底表</strong><p>支持一次上传多个 .xlsx / .xlsm 文件；同一来源自动采用最后上传版本，避免 YTD 重复累计。</p></div><a class="btn primary" href="https://github.com/lucyxlxue-prog/hospital-ops-dashboard-2026/upload/main/input" target="_blank" rel="noopener">选择 Excel 文件</a></div></div></section><section class="panel"><div class="panel-head"><h3>自动导入状态</h3><span class="pill green">GitHub Actions</span></div><div class="panel-body"><div class="api-grid" id="apiCards"></div></div></section><section class="panel"><div class="panel-head"><h3>Excel 字段映射</h3><span class="pill green">自动识别</span></div><div class="panel-body"><div class="table-wrap"><table><thead><tr><th>Sheet</th><th>医院</th><th>项目</th><th>周</th><th>金额</th><th>品类</th></tr></thead><tbody id="mappingRows"></tbody></table></div></div></section><section class="hidden"><pre id="apiExample"></pre></section></section>
+      <section id="portSection" class="hidden"><section class="panel"><div class="panel-head"><h3>每周 Excel 上传端口</h3><span class="pill amber">私有数据区</span></div><div class="panel-body"><div class="upload-callout"><div><strong>原始底表不会放进公开网站仓库</strong><p>私有上传入口正在连接。连接后可一次上传多个 .xlsx / .xlsm 文件，系统自动采用同一来源的最新版本并刷新 YTD。</p></div><button class="btn primary" type="button" disabled>等待私有入口授权</button></div></div></section><section class="panel"><div class="panel-head"><h3>自动导入状态</h3><span class="pill green">已就绪</span></div><div class="panel-body"><div class="api-grid" id="apiCards"></div></div></section><section class="panel"><div class="panel-head"><h3>Excel 字段映射</h3><span class="pill green">自动识别</span></div><div class="panel-body"><div class="table-wrap"><table><thead><tr><th>Sheet</th><th>医院</th><th>项目</th><th>周</th><th>金额</th><th>品类</th></tr></thead><tbody id="mappingRows"></tbody></table></div></div></section><section class="hidden"><pre id="apiExample"></pre></section></section>
     </main>
   </div>
   <script>
